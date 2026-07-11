@@ -1,0 +1,3 @@
+- [x] remove time tracker in sidebar 
+- [x] fix loading when start and delete sprint 
+- [x] add option delete button in project
