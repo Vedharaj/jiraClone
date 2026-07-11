@@ -1,0 +1,36 @@
+services:
+  # Spring Boot Backend Service (Dockerized)
+  - type: web
+    name: jira-clone-backend
+    env: docker
+    plan: free
+    region: oregon # Customize to your preferred region (e.g., singapore, frankfurt, oregon, ohio)
+    branch: main
+    dockerContext: server
+    dockerfilePath: server/Dockerfile
+    envVars:
+      - key: SPRING_DATA_MONGODB_URI
+        sync: false # Set this value in the Render dashboard or specify your connection string here
+      - key: SPRING_DATA_MONGODB_DATABASE
+        value: jiraClone
+      - key: SPRING_MAIL_USERNAME
+        sync: false # Set your SMTP username (optional, for email notifications)
+      - key: SPRING_MAIL_PASSWORD
+        sync: false # Set your SMTP app password (optional, for email notifications)
+
+  # Next.js Frontend Service
+  - type: web
+    name: jira-clone-frontend
+    env: node
+    plan: free
+    region: oregon
+    branch: main
+    rootDir: client
+    buildCommand: npm run build
+    startCommand: npm run start
+    envVars:
+      - key: API_BASE_URL
+        fromService:
+          type: web
+          name: jira-clone-backend
+          property: host
