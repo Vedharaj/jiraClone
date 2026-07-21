@@ -6,7 +6,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import axiosInstance from "@/lib/Axiosinstance";
-import { AlertTriangle, GitBranch, Link2, Trash2 } from "lucide-react";
+import { AlertTriangle, GitBranch, Link2, Pencil, Trash2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Issue } from "@/types/issues";
 
@@ -28,6 +28,7 @@ interface KanbanCardProps {
   onClick?: () => void;
   onStart?: (issue: Issue) => void;
   onDelete?: (issue: Issue) => void;
+  onEdit?: (issue: Issue) => void;
 }
 
 const priorityColors: Record<string, string> = {
@@ -42,7 +43,7 @@ const issueTypeColors: Record<string, string> = {
   STORY: "bg-purple-500",
 };
 
-const KanbanCard = ({ issue, blockers = [], subtasks = [], isOverlay = false, onClick, onStart, onDelete }: KanbanCardProps) => {
+const KanbanCard = ({ issue, blockers = [], subtasks = [], isOverlay = false, onClick, onStart, onDelete, onEdit }: KanbanCardProps) => {
   const [assignee, setAssignee] = useState<any>(null);
 
   // ❗ useSortable ONLY for real cards, not overlay
@@ -105,19 +106,34 @@ const KanbanCard = ({ issue, blockers = [], subtasks = [], isOverlay = false, on
           {issue.title}
         </p>
         {!isOverlay && (
-          <Button
-            size="icon"
-            variant="ghost"
-            title="Delete issue"
-            className="h-6 w-6 shrink-0 text-red-500 hover:bg-red-50 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
-            onPointerDown={(event) => event.stopPropagation()}
-            onClick={(event) => {
-              event.stopPropagation();
-              onDelete?.(issue);
-            }}
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-          </Button>
+          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+            <Button
+              size="icon"
+              variant="ghost"
+              title="Edit issue"
+              className="h-6 w-6 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={(event) => {
+                event.stopPropagation();
+                onEdit?.(issue);
+              }}
+            >
+              <Pencil className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              size="icon"
+              variant="ghost"
+              title="Delete issue"
+              className="h-6 w-6 text-red-500 hover:bg-red-50 hover:text-red-600"
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={(event) => {
+                event.stopPropagation();
+                onDelete?.(issue);
+              }}
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </Button>
+          </div>
         )}
       </div>
       {/* {issue.isSubtask && issue.parentTitle && (

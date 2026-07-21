@@ -7,7 +7,7 @@ import {
 import React from "react";
 import KanbanCard from "./KanbanCard";
 
-const KanbanColumn = ({ column, issues, allIssues, onIssueClick, onStart, onDelete }: any) => {
+const KanbanColumn = ({ column, issues, allIssues, onIssueClick, onStart, onDelete, onEdit }: any) => {
   const { setNodeRef } = useDroppable({
     id: column.id,
   });
@@ -30,6 +30,7 @@ const KanbanColumn = ({ column, issues, allIssues, onIssueClick, onStart, onDele
               onClick={() => onIssueClick(issue)}
               onStart={onStart}
               onDelete={onDelete}
+              onEdit={onEdit}
             />
           ))}
         </SortableContext>

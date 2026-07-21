@@ -18,6 +18,7 @@ import KanbanColumn from "./KanbanColumn";
 import { createPortal } from "react-dom";
 import KanbanCard from "./KanbanCard";
 import IssueModel from "./IssueModel";
+import EditIssueModel from "./EditIssueModel";
 import axiosInstance from "@/lib/Axiosinstance";
 import { useAuth } from "@/lib/AuthContext";
 import { Issue } from "@/types/issues";
@@ -65,6 +66,7 @@ const KanbanBoard = () => {
   const [selectedSprintFilter, setSelectedSprintFilter] = useState<string>("active");
   const [activeIssue, setActiveIssue] = useState<Issue | null>(null);
   const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
+  const [editingIssue, setEditingIssue] = useState<Issue | null>(null);
   const [blockedWarning, setBlockedWarning] = useState<{ issue: Issue; blockers: Issue[] } | null>(null);
 
   const [loading, setLoading] = useState(() => {
@@ -403,6 +405,7 @@ const KanbanBoard = () => {
                     onIssueClick={setSelectedIssue}
                     onStart={(issue: Issue) => updateIssueStatus(issue, "IN_PROGRESS")}
                     onDelete={handleDeleteIssue}
+                    onEdit={setEditingIssue}
                   />
                 );
               })}
@@ -414,6 +417,13 @@ const KanbanBoard = () => {
         issue={selectedIssue}
         isOpen={!!selectedIssue}
         onClose={() => setSelectedIssue(null)}
+      />
+
+      {/* Edit Issue Modal */}
+      <EditIssueModel
+        issue={editingIssue}
+        isOpen={!!editingIssue}
+        onClose={() => setEditingIssue(null)}
       />
 
       <Dialog open={!!blockedWarning} onOpenChange={(open) => !open && setBlockedWarning(null)}>
